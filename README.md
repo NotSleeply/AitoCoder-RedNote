@@ -1,6 +1,6 @@
 # RedNote-Agent | 小红书图文生成
 
-基于 LangGraph 和胜算云 API 的小红书图文内容自动生成工具。
+[胜算云](https://www.shengsuanyun.com/) [PK大赛](https://www.shengsuanyun.com/activity/dc092badb3d1408d81b285d4d243678f)中的小红书图文赛道。
 
 ## 功能特点
 

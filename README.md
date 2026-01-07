@@ -7,7 +7,7 @@
 - 🤖 使用 LangGraph 构建智能工作流
 - 🎨 自动生成符合小红书风格的文案和封面
 - 🎯 支持多种语气风格（温馨治愈、活泼俏皮、专业测评等）
-- 🖼️ 支持 AI 图像生成（Gemini 2.5 Flash Image）
+- 🖼️ 支持 AI 图像生成（Gemini 3 Pro Image Preview）
 - 📦 使用 uv 进行快速依赖管理
 
 ## 快速开始
@@ -23,9 +23,10 @@ uv sync
 编辑 `.env` 文件：
 
 ```env
-MODE_API_KEY=your_api_key
+MODE_API_KEY=`your_api_key`
 MODE_BASE_URL=https://router.shengsuanyun.com/api/v1
 MODE_MODEL=moonshot/Kimi-thinking-preview
+MODE_IMG_MODEL=google/gemini-3-pro-image-preview
 ```
 
 ### 3. 准备输入数据
@@ -57,34 +58,6 @@ uv run main.py
 
 - 文案：`outputs/results.json`
 - 封面：`outputs/covers/`
-
-## 项目结构
-
-```
-.
-├── main.py              # 主程序入口
-├── src/                 # 业务代码
-│   ├── state.py         # 状态定义
-│   ├── agent.py         # LangGraph 工作流
-│   ├── kimi_client.py   # API 客户端
-│   ├── content_generator.py  # 文案生成
-│   ├── cover_generator.py    # 封面生成
-│   ├── image_generator.py    # AI 图像生成
-│   └── processor.py     # 主处理流程
-├── inputs.json          # 输入数据
-├── outputs/             # 输出目录
-├── .env                 # 环境变量
-└── pyproject.toml       # 项目配置
-```
-
-## 技术栈
-
-- **Python 3.12+** - 编程语言
-- **uv** - 包管理工具
-- **LangGraph** - 工作流编排
-- **LangChain** - LLM 框架
-- **胜算云 API** - 文案生成和图像生成
-- **Pillow** - 图像处理（备用方案）
 
 ## 工作流程
 
@@ -119,7 +92,3 @@ uv run main.py
   "tags": ["标签1", "标签2"]
 }
 ```
-
-## 许可证
-
-MIT License

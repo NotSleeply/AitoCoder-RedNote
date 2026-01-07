@@ -22,8 +22,8 @@ uv sync
 
 编辑 `.env` 文件：
 
-```env
-MODE_API_KEY=`your_api_key`
+```json
+MODE_API_KEY=`your_api_key` // 替换为你的胜算云 API Key 
 MODE_BASE_URL=https://router.shengsuanyun.com/api/v1
 MODE_MODEL=moonshot/Kimi-thinking-preview
 MODE_IMG_MODEL=google/gemini-3-pro-image-preview

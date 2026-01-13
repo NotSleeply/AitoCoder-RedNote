@@ -7,7 +7,7 @@
 - 🤖 使用 LangGraph 构建智能工作流
 - 🎨 自动生成符合小红书风格的文案和封面
 - 🎯 支持多种语气风格（温馨治愈、活泼俏皮、专业测评等）
-- 🖼️ 支持 AI 图像生成（Gemini 3 Pro Image Preview）
+- 🖼️ 支持 AI 图像生成（Doubao Seed 1.6）
 - 📦 使用 uv 进行快速依赖管理
 
 ## 快速开始
@@ -26,7 +26,7 @@ uv sync
 MODE_API_KEY=`your_api_key` // 替换为你的胜算云 API Key 
 MODE_BASE_URL=https://router.shengsuanyun.com/api/v1
 MODE_MODEL=moonshot/Kimi-thinking-preview
-MODE_IMG_MODEL=google/gemini-3-pro-image-preview
+MODE_IMG_MODEL=bytedance/doubao-seed-1.6
 ```
 
 ### 3. 准备输入数据
@@ -68,7 +68,7 @@ uv run main.py
     ↓
 生成封面描述 (Kimi API)
     ↓
-生成封面图片 (Gemini Image API / Pillow)
+生成封面图片 (Doubao Seed 1.6 API / Pillow)
     ↓
 保存结果
 ```

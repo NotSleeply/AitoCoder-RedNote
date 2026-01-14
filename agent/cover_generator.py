@@ -114,52 +114,45 @@ def generate_cover(
     Returns:
         封面图路径
     """
-    # 创建输出目录
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    # 图片尺寸 (3:4)
     width, height = 1080, 1440
 
-    # 根据 tone 选择配色
     color_schemes = {
         "温馨治愈": {
-            "bg": (255, 245, 238),  # 温暖米色
-            "primary": (255, 182, 193),  # 粉色
-            "text": (101, 67, 33)  # 深棕色
+            "bg": (255, 245, 238),
+            "primary": (255, 182, 193),
+            "text": (101, 67, 33)
         },
         "活泼俏皮": {
-            "bg": (255, 250, 205),  # 柠檬黄
-            "primary": (255, 105, 180),  # 亮粉
-            "text": (255, 69, 0)  # 橙红
+            "bg": (255, 250, 205),
+            "primary": (255, 105, 180),
+            "text": (255, 69, 0)
         },
         "专业测评": {
-            "bg": (240, 248, 255),  # 浅蓝
-            "primary": (70, 130, 180),  # 钢青色
-            "text": (25, 25, 112)  # 深蓝
+            "bg": (240, 248, 255),
+            "primary": (70, 130, 180),
+            "text": (25, 25, 112)
         },
         "种草安利": {
-            "bg": (255, 228, 225),  # 浅粉
-            "primary": (255, 99, 71),  # 番茄红
-            "text": (139, 0, 0)  # 深红
+            "bg": (255, 228, 225),
+            "primary": (255, 99, 71),
+            "text": (139, 0, 0)
         },
         "简约高级": {
-            "bg": (250, 250, 250),  # 浅灰
-            "primary": (169, 169, 169),  # 灰色
-            "text": (47, 79, 79)  # 深灰
+            "bg": (250, 250, 250),
+            "primary": (169, 169, 169),
+            "text": (47, 79, 79)
         }
     }
 
     colors = color_schemes.get(tone, color_schemes["温馨治愈"])
 
-    # 创建图像
     img = Image.new('RGB', (width, height), colors["bg"])
     draw = ImageDraw.Draw(img)
 
-    # 绘制装饰元素
-    # 顶部色块
     draw.rectangle([(0, 0), (width, 400)], fill=colors["primary"])
 
-    # 底部渐变效果（简化为色块）
     draw.rectangle([(0, height-300), (width, height)],
                    fill=colors["primary"] + (128,))
 
@@ -233,7 +226,6 @@ def generate_cover(
                   fill=colors["text"], font=font_large)
         y_offset += line_height
 
-    # 绘制装饰文字
     decoration = "✨ 种草推荐 ✨"
     bbox = draw.textbbox((0, 0), decoration, font=font_small)
     text_width = bbox[2] - bbox[0]
@@ -247,23 +239,10 @@ def generate_cover(
     draw.text((text_x, text_y), decoration,
               fill="white", font=font_small)
 
-    # 保存图片
     output_path = Path(output_dir) / f"{product_id}_cover.png"
     img.save(output_path, "PNG")
 
     return str(output_path)
-
-
-if __name__ == "__main__":
-    # 测试
-    test_cover = generate_cover(
-        product_id="TEST001",
-        product_name="测试产品",
-        title="这是一个测试标题！",
-        image_prompt="测试图片描述",
-        tone="温馨治愈"
-    )
-    print(f"测试封面已生成: {test_cover}")
 
 
 def generate_cover_node(state):
@@ -279,7 +258,6 @@ def generate_cover_node(state):
     product_id = product["product_id"]
 
     try:
-        # 使用 Kimi 生成图片描述
         client = init_kimi_client()
 
         prompt = f"""你是一位专业的AI图像提示词工程师,请为小红书封面生成详细的英文AI图像提示词。
@@ -308,7 +286,6 @@ def generate_cover_node(state):
         response = client.invoke([HumanMessage(content=prompt)])
         image_prompt = response.content.strip()
 
-        # 清理可能的markdown格式
         if image_prompt.startswith("```"):
             lines = image_prompt.split("\n")
             image_prompt = "\n".join(
@@ -319,24 +296,19 @@ def generate_cover_node(state):
         print(f"\n   🎨 AI提示词生成:")
         print(f"   {image_prompt}\n")
 
-        # 优先使用 Gemini AI 生成封面
         output_path = f"outputs/covers/{product_id}_cover.png"
 
         print(f"   🚀 开始生成AI封面...")
         if generate_image_with_api(image_prompt, output_path, aspect_ratio="3:4"):
             print(f"   ✨ AI封面生成完成!\n")
-            
-            # **重要：在AI生成的图片上添加文字元素**
+
             print(f"   📝 正在叠加文字...")
             try:
-                # 读取AI生成的图片
                 from PIL import Image
                 img = Image.open(output_path)
-                
-                # 创建绘图对象
+
                 draw = ImageDraw.Draw(img)
-                
-                # 获取配色方案
+
                 color_schemes = {
                     "温馨治愈": {
                         "bg": (255, 245, 238),
@@ -365,8 +337,7 @@ def generate_cover_node(state):
                     }
                 }
                 colors = color_schemes.get(product["tone"], color_schemes["温馨治愈"])
-                
-                # 加载字体
+
                 try:
                     import os
                     font_paths = [
@@ -390,7 +361,7 @@ def generate_cover_node(state):
                 except:
                     font_medium = ImageFont.load_default()
                     font_small = ImageFont.load_default()
-                
+
                 width, height = img.size
                 layout_seed = sum(ord(c) for c in str(product_id)) % 5
                 outer_margin = 36
@@ -429,18 +400,16 @@ def generate_cover_node(state):
                         text_x = x0 + inner_margin
                         draw.text((text_x, y_offset), line, fill=colors["text"], font=font_medium, stroke_width=2, stroke_fill=(255, 255, 255))
                         y_offset += line_height
-                
-                # 保存添加文字后的图片
+
                 img.save(output_path, "PNG")
                 print(f"   ✅ 文字添加完成!\n")
-                
+
             except Exception as e:
                 print(f"   ⚠️ 文字添加失败: {str(e)}，使用原图")
-            
+
             state["cover_path"] = output_path
-            state["image_prompt"] = image_prompt  # 保存提示词
+            state["image_prompt"] = image_prompt
         else:
-            # 失败时使用 Pillow 备用方案
             print(f"   ⚠️ AI生成失败,使用备用方案...\n")
             cover_path = generate_cover(
                 product_id=product_id,
@@ -460,3 +429,4 @@ def generate_cover_node(state):
         state["error"] = f"封面生成失败: {str(e)}"
 
     return state
+

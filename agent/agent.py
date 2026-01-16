@@ -20,3 +20,4 @@ def build_graph() -> StateGraph:
     workflow.add_edge("generate_cover", END)
 
     return workflow.compile()
+

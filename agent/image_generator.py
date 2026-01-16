@@ -33,7 +33,6 @@ def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "
     }
 
     try:
-        # 提交图像生成任务
         payload = {
             "model": "google/gemini-2.5-flash-image",
             "prompt": prompt,
@@ -78,7 +77,6 @@ def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "
 
         print(f"   ✅ 任务已提交 (ID: {request_id})")
 
-        # 轮询查询结果（最多等待120秒）
         max_attempts = 60
         for attempt in range(max_attempts):
             time.sleep(2)
@@ -103,12 +101,10 @@ def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "
             status = data.get("status")
             progress = data.get("progress", "N/A")
 
-            # 每10秒显示一次进度
             if attempt % 5 == 0:
                 print(f"   ⏳ 生成中... 状态: {status}, 进度: {progress}")
 
             if status == "COMPLETED":
-                # 任务完成，获取图片URL
                 result_data = data.get("data", {})
                 image_urls = result_data.get("image_urls", [])
 
@@ -117,7 +113,6 @@ def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "
                     return False
 
                 print(f"   📥 下载图片...")
-                # 下载图片
                 img_response = requests.get(image_urls[0], timeout=30)
                 if img_response.status_code == 200:
                     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
@@ -142,3 +137,4 @@ def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "
         import traceback
         traceback.print_exc()
         return False
+

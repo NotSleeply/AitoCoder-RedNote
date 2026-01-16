@@ -6,7 +6,6 @@ import sys
 import os
 from pathlib import Path
 
-# Windows 控制台编码修复
 if sys.platform == 'win32':
     os.system('chcp 65001 > nul 2>&1')
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -66,3 +65,4 @@ def process_products(input_file: str = "inputs.json", output_dir: str = "outputs
 
     print(f"\n[完成] 所有产品处理完成! 结果已保存到 {output_dir}/")
     print(f"   共生成 {len(results)} 个产品的内容")
+

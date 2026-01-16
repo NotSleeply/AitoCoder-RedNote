@@ -24,3 +24,4 @@ def init_kimi_client() -> ChatOpenAI:
             'X-Title': 'RedNote-Agent'
         }
     )
+

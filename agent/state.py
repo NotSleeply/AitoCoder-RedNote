@@ -12,3 +12,4 @@ class AgentState(TypedDict):
     tags: list[str]
     cover_path: str
     error: str | None
+

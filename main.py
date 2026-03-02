@@ -3,7 +3,7 @@ RedNote-Agent 主程序入口
 小红书图文生成工具
 """
 from dotenv import load_dotenv
-from agent.processor import process_products
+from src.processor import process_products
 
 
 def main():

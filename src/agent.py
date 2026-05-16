@@ -2,13 +2,14 @@
 Agent 工作流定义
 """
 from langgraph.graph import StateGraph, END
+from langgraph.graph.state import CompiledStateGraph
 
 from .state import AgentState
 from .content_generator import generate_content_node
 from .cover_generator import generate_cover_node
 
 
-def build_graph() -> StateGraph:
+def build_graph() -> CompiledStateGraph:
     """构建 LangGraph 工作流"""
     workflow = StateGraph(AgentState)
 
@@ -20,4 +21,3 @@ def build_graph() -> StateGraph:
     workflow.add_edge("generate_cover", END)
 
     return workflow.compile()
-

@@ -18,7 +18,7 @@ def sanitize_text(text: str) -> str:
     return "".join(result)
 
 
-def wrap_text_by_width(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, max_width: int, max_lines: int = 3):
+def wrap_text_by_width(draw: ImageDraw.ImageDraw, text: str, font, max_width: int, max_lines: int = 3):
     if not text:
         return []
     text = text.strip()
@@ -183,6 +183,11 @@ def generate_cover(
         font_medium = ImageFont.load_default()
         font_small = ImageFont.load_default()
 
+    def get_font_height(font_obj):
+        """获取字体高度"""
+        bbox = draw.textbbox((0, 0), "测试", font=font_obj)
+        return bbox[3] - bbox[1]
+
     layout_seed = sum(ord(c) for c in str(product_id)) % 3
     margin = 60
     max_text_width = width - margin * 2
@@ -208,7 +213,7 @@ def generate_cover(
     else:
         y_offset = 640
 
-    line_height = font_large.size + 10
+    line_height = get_font_height(font_large) + 10
     block_height = line_height * min(3, len(title_lines or []))
     if block_height > 0 and y_offset + block_height > height - margin:
         y_offset = height - margin - block_height
@@ -248,7 +253,7 @@ def generate_cover(
 def generate_cover_node(state):
     """生成封面图节点 - 使用 Gemini AI 生成"""
     from langchain_core.messages import HumanMessage
-    from .kimi_client import init_kimi_client
+    from .llm_client import init_llm_client
     from .image_generator import generate_image_with_api
 
     if state.get("error"):
@@ -258,7 +263,7 @@ def generate_cover_node(state):
     product_id = product["product_id"]
 
     try:
-        client = init_kimi_client()
+        client = init_llm_client()
 
         prompt = f"""你是一位专业的AI图像提示词工程师,请为小红书封面生成详细的英文AI图像提示词。
 
@@ -284,7 +289,7 @@ def generate_cover_node(state):
 请直接返回英文提示词,不要解释,不要中文。"""
 
         response = client.invoke([HumanMessage(content=prompt)])
-        image_prompt = response.content.strip()
+        image_prompt = str(response.content).strip()
 
         if image_prompt.startswith("```"):
             lines = image_prompt.split("\n")
@@ -387,7 +392,9 @@ def generate_cover_node(state):
                     max_text_width = (x1 - x0) - inner_margin * 2
 
                     lines = wrap_text_by_width(draw, title_text, font_medium, max_text_width, max_lines=3)
-                    line_height = font_medium.size + 8
+                    bbox = draw.textbbox((0, 0), "测试", font=font_medium)
+                    font_height = bbox[3] - bbox[1]
+                    line_height = font_height + 8
                     block_height = line_height * min(3, len(lines))
                     if block_height <= 0:
                         y_offset = y0 + inner_margin
@@ -429,4 +436,3 @@ def generate_cover_node(state):
         state["error"] = f"封面生成失败: {str(e)}"
 
     return state
-

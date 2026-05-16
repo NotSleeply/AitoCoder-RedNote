@@ -4,7 +4,7 @@
 import json
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from .kimi_client import init_kimi_client
+from .llm_client import init_llm_client
 from .state import AgentState
 
 
@@ -46,14 +46,14 @@ def generate_content_node(state: AgentState) -> AgentState:
 请生成小红书笔记内容。"""
 
     try:
-        client = init_kimi_client()
+        client = init_llm_client()
         messages = [
             SystemMessage(content=system_prompt),
             HumanMessage(content=user_prompt)
         ]
 
         response = client.invoke(messages)
-        content_text = response.content
+        content_text = str(response.content)
 
         if "```json" in content_text:
             content_text = content_text.split("```json")[1].split("```")[0].strip()
@@ -70,4 +70,3 @@ def generate_content_node(state: AgentState) -> AgentState:
         state["error"] = f"文案生成失败: {str(e)}"
 
     return state
-

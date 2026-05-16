@@ -61,7 +61,7 @@ uv run main.py
 
 ## 工作流程
 
-```
+```bash
 加载产品数据
     ↓
 生成文案内容 (Kimi API)

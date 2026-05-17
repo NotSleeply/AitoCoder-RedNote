@@ -20,10 +20,10 @@ uv sync
 
 ### 2. 配置环境变量
 
-编辑 `.env` 文件：
+首先，将 `.env.example` 文件复制一份并重命名为 `.env`。然后，编辑 `.env` 文件：
 
-```json
-MODE_API_KEY=`your_api_key` // 替换为你的胜算云 API Key 
+```
+MODE_API_KEY="your_api_key" # 替换为你的胜算云 API Key
 MODE_BASE_URL=https://router.shengsuanyun.com/api/v1
 MODE_MODEL=moonshot/Kimi-thinking-preview
 MODE_IMG_MODEL=bytedance/doubao-seed-1.6
@@ -31,7 +31,7 @@ MODE_IMG_MODEL=bytedance/doubao-seed-1.6
 
 ### 3. 准备输入数据
 
-编辑 `inputs.json`：
+编辑 `inputs.json`，可以放入一个或多个产品信息：
 
 ```json
 [
@@ -56,24 +56,28 @@ uv run main.py
 
 ### 5. 查看结果
 
-- 文案：`outputs/results.json`
-- 封面：`outputs/covers/`
+程序运行结束后，所有生成的内容会保存在 `outputs` 目录下：
+
+- **文案**: `outputs/results.json` (包含所有产品的生成结果)
+- **封面**: `outputs/covers/{product_id}_cover.png` (例如 `P001_cover.png`)
 
 ## 工作流程
 
-```bash
-加载产品数据
-    ↓
-生成文案内容 (Kimi API)
-    ↓
-生成封面描述 (Kimi API)
-    ↓
-生成封面图片 (Doubao Seed 1.6 API / Pillow)
-    ↓
-保存结果
+```mermaid
+graph TD
+    A[开始] --> B{加载所有产品数据};
+    B --> C{循环处理每个产品};
+    C --> D[生成文案内容 (Kimi)];
+    D --> E[生成封面描述 (Kimi)];
+    E --> F[生成封面图片 (Doubao/Pillow)];
+    F --> G{是否所有产品都已处理?};
+    G -- 否 --> C;
+    G -- 是 --> H[汇总所有结果];
+    H --> I[保存到 results.json];
+    I --> J[结束];
 ```
 
-## tone 可选值
+## `tone` 可选值
 
 - `温馨治愈` - 温暖、治愈、像朋友般贴心
 - `活泼俏皮` - 活泼、可爱、充满活力
@@ -82,6 +86,8 @@ uv run main.py
 - `简约高级` - 简洁、高级、有品质感
 
 ## 输出格式
+
+`results.json` 文件中的每一项内容格式如下：
 
 ```json
 {
@@ -92,3 +98,8 @@ uv run main.py
   "tags": ["标签1", "标签2"]
 }
 ```
+
+## 注意事项
+
+- **Windows 用户**: 项目已内置对 Windows 终端的编码处理 (`chcp 65001`)，以尽量避免在运行时出现乱码问题。如果依然存在问题，请确保您的终端（如 PowerShell, CMD）默认使用 UTF-8 编码。
+

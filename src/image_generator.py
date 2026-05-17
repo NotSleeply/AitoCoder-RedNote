@@ -1,6 +1,5 @@
 """
-图像生成模块 - 使用胜算云异步任务 API
-支持多种AI图像生成模型
+图像生成模块
 """
 import os
 import time
@@ -10,7 +9,7 @@ from pathlib import Path
 
 def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "3:4") -> bool:
     """
-    使用胜算云图像生成 API
+    图像生成 API
 
     Args:
         prompt: 图像描述提示词（英文）
@@ -20,11 +19,11 @@ def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "
     Returns:
         是否成功生成图像
     """
-    api_key = os.getenv("MODE_API_KEY")
-    base_url = "https://router.shengsuanyun.com/api"
+    api_key = os.getenv("MODE_IMG_API_KEY")
+    base_url = os.getenv("MODE_IMG_BASE_URL")
 
     if not api_key:
-        print("   ❌ 未找到 MODE_API_KEY 环境变量")
+        print("   ❌ 未找到 MODE_IMG_API_KEY 环境变量")
         return False
 
     headers = {
@@ -34,7 +33,7 @@ def generate_image_with_api(prompt: str, output_path: str, aspect_ratio: str = "
 
     try:
         payload = {
-            "model": "google/gemini-2.5-flash-image",
+            "model": os.getenv("MODE_IMG_MODEL"),
             "prompt": prompt,
             "aspect_ratio": aspect_ratio,
             "response_modalities": ["IMAGE"]

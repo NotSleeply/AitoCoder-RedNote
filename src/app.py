@@ -12,8 +12,8 @@ if sys.platform == 'win32':
     if callable(stdout_attr):
         stdout_attr(encoding='utf-8', errors='replace')
 
-from .state import AgentState
-from .agent import build_graph
+from .core.state import AgentState
+from .core.agent import build_graph
 
 
 def load_products(file_path: str = "inputs.json") -> list[dict]:

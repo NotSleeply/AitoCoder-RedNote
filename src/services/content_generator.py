@@ -5,7 +5,7 @@ import json
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from .llm_client import init_llm_client
-from .state import AgentState
+from ..core.state import AgentState
 
 
 def generate_content_node(state: AgentState) -> AgentState:

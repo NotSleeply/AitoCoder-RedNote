@@ -5,8 +5,8 @@ from langgraph.graph import StateGraph, END
 from langgraph.graph.state import CompiledStateGraph
 
 from .state import AgentState
-from .content_generator import generate_content_node
-from .cover_generator import generate_cover_node
+from ..services.content_generator import generate_content_node
+from ..services.cover_generator import generate_cover_node
 
 
 def build_graph() -> CompiledStateGraph:

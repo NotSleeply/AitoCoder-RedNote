@@ -253,6 +253,7 @@ def generate_cover(
 def generate_cover_node(state):
     """生成封面图节点 - 使用 Gemini AI 生成"""
     from langchain_core.messages import HumanMessage
+    from ..core.state import AgentState
     from .llm_client import init_llm_client
     from .image_generator import generate_image_with_api
 

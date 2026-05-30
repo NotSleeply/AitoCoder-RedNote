@@ -66,6 +66,8 @@ def generate_content_node(state: AgentState) -> AgentState:
         state["content"] = result.get("content", "")
         state["tags"] = result.get("tags", [])
 
+    except ValueError as e:
+        state["error"] = f"文案生成失败（配置错误）: {str(e)}"
     except Exception as e:
         state["error"] = f"文案生成失败: {str(e)}"
 
